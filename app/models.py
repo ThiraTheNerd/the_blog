@@ -25,6 +25,17 @@ class User(UserMixin, db.Model):
     pass_secure = db.Column(db.String(255))
     role_id = db.Column(db.Integer,db.ForeignKey('roles.id'))
     
+    def __init__(self,id,username,email,bio,profile_pic_path,pass_secure,role_id):
+        self.id =id
+        self.username = username
+        self.email = email
+        self.bio = profile_pic_path
+        self.pass_secure = pass_secure
+        self.role_id = role_id
+
+    def save_user(self):
+        d.session.add(self)
+        db.session.commit()
     
     
     @property
