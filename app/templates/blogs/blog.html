@@ -5,6 +5,12 @@
   <div class="row">
       <!-- Blog entries-->
       <div class="col-lg-8">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+        </div>
+        {% endfor %}
           <!-- Featured blog post-->
           <article class="media content-section mt-5 pt-2">
             <img class="rounded-circle article-img" src="https://source.unsplash.com/125x125/?profile,photo" alt="{{ blog.user.username }} profile photo">

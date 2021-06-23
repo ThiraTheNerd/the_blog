@@ -40,6 +40,37 @@ def blog(blog_id):
     # post_comments = Comment.get_comments(post_id)
     title = f'blog_id' 
     return render_template('blogs/blog.html', title = title, blog=blog, comments = comments)
+@main.route("/post/<int:blog_id>/update", methods=['GET', 'POST'])
+def update_post(blog_id):
+    blog = Blog.query.get_or_404(blog_id)
+    if blog.user != current_user:
+        abort(403)
+    form = BlogForm()
+    if form.validate_on_submit():
+        blog.title = form.title.data
+        blog.subtitle = form.subtitle.data
+        blog.content = form.content.data
+        
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('main.blog', blog_id=post.id))
+    elif request.method == 'GET':
+        form.title.data = blog.title
+        form.subtitle = blog.subtitle
+        form.content.data = blog.content
+    return render_template('add.html', title='Update Post', form=form)
+
+@main.route("/post/<int:blog_id>/delete", methods=['POST'])
+@login_required
+def delete_post(blog_id):
+    blog = Blog.query.get_or_404(post_id)
+    if blog.user != current_user:
+        abort(403)
+    db.session.delete(blog)
+    db.session.commit()
+    
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('main.index'))
 
 @main.route('/post/comments/new/<int:id>',methods = ['GET','POST'])
 @login_required
