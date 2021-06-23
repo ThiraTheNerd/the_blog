@@ -65,8 +65,7 @@ class Blog(db.Model):
     date = db.Column(db.DateTime,default=datetime.utcnow)
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     comments = db.relationship('Comment', backref = 'blog', lazy ='dynamic')
-    post_pic_path = db.Column(db.String())
-
+    
     def save_blog(self):
         '''
         Function that saves pitches
