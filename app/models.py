@@ -26,6 +26,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(255), unique = True, index = True)
     pass_secure = db.Column(db.String(255))
     blogs = db.relationship('Blog',backref = 'user',lazy = "dynamic")
+    profile_pic_path = db.Column(db.String())
     
     def __init__(self,username,email,pass_secure):
         self.username = username
@@ -64,6 +65,7 @@ class Blog(db.Model):
     date = db.Column(db.DateTime,default=datetime.utcnow)
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     comments = db.relationship('Comment', backref = 'blog', lazy ='dynamic')
+    post_pic_path = db.Column(db.String())
 
     def save_blog(self):
         '''

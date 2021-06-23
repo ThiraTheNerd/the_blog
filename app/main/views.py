@@ -1,9 +1,9 @@
-from flask import render_template,request,redirect,url_for
+from flask import render_template,request,redirect,url_for,flash,abort
 from ..requests import get_quotes
 from . import main
 from flask_login import login_required, current_user
-from .forms import BlogForm,CommentForm
-from ..models import Blog,Comment
+from .forms import BlogForm,CommentForm,UpdateProfile
+from ..models import Blog,Comment, User
 from .. import db
 
 #Views
@@ -14,6 +14,33 @@ def index():
   blogs = Blog.query.order_by(Blog.date.desc()).paginate(page=page, per_page=10)
   title = "The Blog hompage"
   return render_template('index.html', quotes = quotes, title = title, blogs=blogs)
+
+@main.route('/user/<uname>')
+def profile(uname):
+    user = User.query.filter_by(username = uname).first()
+
+    if user is None:
+        abort(404)
+
+    return render_template("profile/profile.html", user = user)
+@main.route('/user/<uname>/update',methods = ['GET','POST'])
+@login_required
+def update_profile(uname):
+    user = User.query.filter_by(username = uname).first()
+    if user is None:
+        abort(404)
+
+    form = UpdateProfile()
+
+    if form.validate_on_submit():
+        user.bio = form.bio.data
+
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for('.profile',uname=user.username))
+
+    return render_template('profile/update.html',form =form)
 
 @main.route('/blog/new', methods =['GET','POST'])
 @login_required
@@ -53,17 +80,17 @@ def update_post(blog_id):
         
         db.session.commit()
         flash('Your post has been updated!', 'success')
-        return redirect(url_for('main.blog', blog_id=post.id))
+        return redirect(url_for('main.blog', blog_id=blog.id))
     elif request.method == 'GET':
         form.title.data = blog.title
         form.subtitle = blog.subtitle
         form.content.data = blog.content
-    return render_template('add.html', title='Update Post', form=form)
+    return render_template('blogs/edit_blog.html', title='Update Post', form=form)
 
-@main.route("/post/<int:blog_id>/delete", methods=['POST'])
+@main.route("/blog/<int:blog_id>/delete", methods=['GET','POST'])
 @login_required
 def delete_post(blog_id):
-    blog = Blog.query.get_or_404(post_id)
+    blog = Blog.query.get_or_404(blog_id)
     if blog.user != current_user:
         abort(403)
     db.session.delete(blog)
@@ -83,6 +110,16 @@ def new_comment(id):
         return redirect(url_for('main.blog',blog_id=id))
     
     return render_template('blogs/new_comment.html',comment_form=form)
+
+@main.route("/comment/<int:id>/delete", methods=['GET', 'POST'])
+@login_required
+def delete_comment(id):
+    comment = Comment.query.get_or_404(id)
+    db.session.delete(comment)
+    db.session.commit()
+    
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('main.blog'))
 
 
 

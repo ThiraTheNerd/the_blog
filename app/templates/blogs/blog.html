@@ -22,8 +22,11 @@
       
                       {% if blog.user == current_user%}
                       <div>
-                          <a class="btn btn-secondary btn-sm mt-2 mb-2" href="">Edit</a>
-                          <button type="button" class="btn btn-danger btn-sm m-1 mb-1"  data-toggle="modal" data-target="#deleteModal">Delete</button>
+                          <a class="btn btn-secondary btn-sm mt-2 mb-2" 
+                          href="{{url_for('main.update_post', blog_id = blog.id)}}">Edit</a>
+                          <button type="button" class="btn btn-danger btn-sm m-1 mb-1" 
+                          data-toggle="modal" data-target="#deleteModal">
+                          <a href="{{url_for('main.delete_post',blog_id=blog.id)}}">Delete</a></button>
                       </div>
       
                       {% endif %}
@@ -44,6 +47,7 @@
                 <ul>
                     <small>Posted by: {{comment.blog.user.username}}</small></li>
                     <li><h4> {{ comment.comment }} </h4>
+                      <a class="button" href="{{url_for('main.delete_comment', id= comment.id)}}">Delete Comment</a>
                 </ul>
             
             {% endfor %} 
