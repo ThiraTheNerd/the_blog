@@ -19,7 +19,9 @@
             <!-- Featured blog post-->
             {% for blog in blogs.items %}
             <div class="card mb-4">
-                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                <a href="#!">
+                    <img class="card-img-top" src="https://source.unsplash.com/125x125/?profile,photo"
+                     alt="..." style="height: 250px; width: 600px;"/></a>
                 <div class="card-body">
                     <div class="small text-muted">{{blog.date.strftime('%B %d, %Y')}}</div>
                     <h2 class="card-title">{{blog.title}}</h2>

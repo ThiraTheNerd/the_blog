@@ -1,31 +1,34 @@
 {% extends 'base.html'%}
 
 {% block content%} 
-
-    <article class="media content-section mt-5 pt-2">
-      <img class="rounded-circle article-img" src="https://source.unsplash.com/125x125/?profile,photo" alt="{{ post.author.username }} profile photo">
-            <div class="media-body">
-              <div class="article-metadata">
-                <a class="mr-2" href="">{{ blog.user.username }}</a>
-                <small class="text-muted mr-2">{{ blog.posted_date.strftime('%Y-%m-%d') }}</small>
-                <small>Posted in: <a class="mr-2" href="">{{ blog.subtitle }}</a></small>
-
-                {% if blog.user == current_user%}
-                <div>
-                    <a class="btn btn-secondary btn-sm mt-2 mb-2" href="">Edit</a>
-                    <button type="button" class="btn btn-danger btn-sm m-1 mb-1"  data-toggle="modal" data-target="#deleteModal">Delete</button>
-                </div>
-
-                {% endif %}
-              </div>
-              <h2 class="article-title mt-2">{{ blog.title }}</h2>
-              <p class="article-content">{{ blog.content }}</p>
-            </div>
-    </article>
-    <div class="content-section">
-        <a class="ratings" href=""> Leave a comment</a>
-
-        <div class="mt-4 mb-4">
+<div class="container">
+  <div class="row">
+      <!-- Blog entries-->
+      <div class="col-lg-8">
+          <!-- Featured blog post-->
+          <article class="media content-section mt-5 pt-2">
+            <img class="rounded-circle article-img" src="https://source.unsplash.com/125x125/?profile,photo" alt="{{ blog.user.username }} profile photo">
+                  <div class="media-body">
+                    <div class="article-metadata">
+                      <a class="mr-2" href="">{{ blog.user.username }}</a>
+                      <small class="text-muted mr-2">{{ blog.date.strftime('%Y-%m-%d') }}</small>
+                      <small>Posted in: <a class="mr-2" href="">{{ blog.subtitle }}</a></small>
+      
+                      {% if blog.user == current_user%}
+                      <div>
+                          <a class="btn btn-secondary btn-sm mt-2 mb-2" href="">Edit</a>
+                          <button type="button" class="btn btn-danger btn-sm m-1 mb-1"  data-toggle="modal" data-target="#deleteModal">Delete</button>
+                      </div>
+      
+                      {% endif %}
+                    </div>
+                    <h2 class="article-title mt-2">{{ blog.title }}</h2>
+                    <p class="article-content">{{ blog.content }}</p>
+                  </div>
+          </article>
+          <div class="content-section">
+              <a class="ratings" href="{{url_for('main.new_comment', id=blog.id)}}"> Leave a comment</a>
+              <div class="mt-4 mb-4">
 
                 <h2>Comments</h2>
                 <hr>
@@ -33,7 +36,7 @@
                 {% for comment in comments %}
 
                 <ul>
-                    <small>Posted by: {{comment.post.author.username}}</small></li>
+                    <small>Posted by: {{comment.blog.user.username}}</small></li>
                     <li><h4> {{ comment.comment }} </h4>
                 </ul>
             
@@ -43,6 +46,47 @@
             {% endif %}
             </div>
     </div>
+      </div>
+
+      <!-- Side widgets-->
+      <div class="col-lg-4">
+          <!-- Search widget-->
+          <div class="card mb-4">
+              <div class="card-header">Search</div>
+              <div class="card-body">
+                  <div class="input-group">
+                      <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                      <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                  </div>
+              </div>
+          </div>
+          <!-- Categories widget-->
+          <div class="card mb-4">
+              <div class="card-header">Categories</div>
+              <div class="card-body">
+                  <div class="row">
+                      <div class="col-sm-6">
+                          <ul class="list-unstyled mb-0">
+                              <li><a href="#!">Web Design</a></li>
+                              <li><a href="#!">HTML</a></li>
+                              <li><a href="#!">Freebies</a></li>
+                          </ul>
+                      </div>
+                      <div class="col-sm-6">
+                          <ul class="list-unstyled mb-0">
+                              <li><a href="#!">JavaScript</a></li>
+                              <li><a href="#!">CSS</a></li>
+                              <li><a href="#!">Tutorials</a></li>
+                          </ul>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  </div>
+</div>
+
+
+
    <!-- Modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -55,7 +99,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+              <form action="" method="POST">
                 <input class="btn btn-danger" type="submit" value="Delete">
               </form>
             </div>
