@@ -63,6 +63,7 @@ class Blog(db.Model):
     content =  db.Column(db.String(1000))
     date = db.Column(db.DateTime,default=datetime.utcnow)
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    comments = db.relationship('Comment', backref = 'blog', lazy ='dynamic')
 
     def save_blog(self):
         '''
@@ -83,3 +84,28 @@ class Blog(db.Model):
         '''
         '''
         db.session.delete()
+
+class Comment(db.Model):
+
+    __tablename__ = 'comments'
+
+    id = db.Column(db.Integer,primary_key = True)
+    comment = db.Column(db.String)
+    blog_id = db.Column(db.Integer,db.ForeignKey('blogs.id'))
+    posted = db.Column(db.DateTime,default=datetime.utcnow)
+ 
+    def save_comments(self):
+        db.session.add(self)
+        db.session.commit()
+        
+
+    @classmethod
+    def get_comments(cls,id):
+        comments = Comment.query.filter_by(blog_id=id).all()
+        return comments
+
+
+    @classmethod
+    def clear_comments(cls):
+        Comment.all_comments.clear()
+
