@@ -16,7 +16,7 @@
             <img class="rounded-circle article-img" src="https://source.unsplash.com/125x125/?profile,photo" alt="{{ blog.user.username }} profile photo">
                   <div class="media-body">
                     <div class="article-metadata">
-                      <a class="mr-2" href="">{{ blog.user.username }}</a>
+                      <a class="mr-2" href="{{url_for('main.profile' uname = blog.user.username )}}">{{ blog.user.username }}</a>
                       <small class="text-muted mr-2">{{ blog.date.strftime('%Y-%m-%d') }}</small>
                       <small>Posted in: <a class="mr-2" href="">{{ blog.subtitle }}</a></small>
       
